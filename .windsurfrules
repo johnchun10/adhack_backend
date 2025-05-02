@@ -1,0 +1,38 @@
+# Windsurf Rules for the Snipe/strike Project
+
+# --- Project Overview ---
+1.  Project name is "Snipe" or "strike".
+2.  This is a mobile application with an iOS frontend and a separate backend API.
+
+# --- Frontend (iOS - Swift) ---
+3.  Frontend language is Swift.
+4.  Frontend framework is SwiftUI.
+5.  Frontend architecture follows MVVM principles (Views, ViewModels, Models, Services folders).
+6.  State management uses Combine (`ObservableObject`, `@Published`) and SwiftUI property wrappers (`@StateObject`, `@EnvironmentObject`, `@State`, `@Binding`).
+7.  Use `async/await` and `Task{}` for asynchronous operations in Swift.
+8.  Networking is centralized in the `NetworkManager` singleton located in `Services.swift`. Adhere to its defined methods for API calls.
+9.  Mapping uses `MapKit` (`Map`, `MapReader`, `MKCoordinateRegion`, `CLLocationCoordinate2D`).
+10. Location services use `CoreLocation` via the `LocationManager` singleton in `Services.swift`.
+11. User notifications use `UserNotifications` framework via the `NotificationManager` singleton in `Services.swift`.
+12. User identification is managed by the `UserManager` singleton using `UserDefaults`. There is no traditional login/authentication.
+13. Data models are defined in `Models.swift`.
+14. Core application state (like current duel status) is managed by `AppStateViewModel`.
+15. Follow Swift API Design Guidelines and standard Swift practices.
+16. Prefer native SwiftUI views and controls.
+
+# --- Backend (Python - FastAPI) ---
+17. Backend language is Python 3.
+18. Backend framework is FastAPI.
+19. Backend interacts with a Supabase (PostgreSQL) database.
+20. Database interaction uses the `supabase-python` library.
+21. Access Supabase using the `service_role` key (RLS is not used). Ensure the client is initialized correctly.
+22. Primary keys in the database are UUIDs.
+23. Key database tables are `users`, `friendships`, and `duels`. Adhere to the defined schema for these tables.
+24. API follows RESTful principles. Key endpoints involve users, friends, and duels (reference previous definitions if needed).
+25. Backend will be deployed to Google Cloud Run.
+26. Follow Python standard library conventions and FastAPI best practices. Use Pydantic models for request/response validation.
+
+# --- General ---
+27. Do not introduce new major dependencies (Swift Packages or Python libraries) without explicit instruction.
+28. Avoid modifying core application setup files like `SnipeApp.swift` or `ContentView.swift` unless directly related to app lifecycle or root view changes.
+29. Dates and times should generally be handled using `Date` in Swift, ISO 8601 strings for API transfer, and `TIMESTAMPTZ` or `DATE` in the database.

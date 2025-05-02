@@ -1,9 +1,15 @@
 from fastapi import FastAPI
-from routes import example, friends, duels
+from contextlib import asynccontextmanager
+from routes import users, friends, duels
+from db import init_supabase           # ← import your init function
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await init_supabase()               # initialize Supabase client on startup
+    yield
 
-# Include routers from the routes folder
-app.include_router(example.router)
+app = FastAPI(lifespan=lifespan)
+
+app.include_router(users.router)
 app.include_router(friends.router)
 app.include_router(duels.router)

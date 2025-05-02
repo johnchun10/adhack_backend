@@ -9,11 +9,18 @@ load_dotenv()
 url: str = os.environ.get("SUPABASE_URL")
 key: str = os.environ.get("SUPABASE_KEY")
 
-supabase: AsyncClient = None
-ref = None
+db: AsyncClient = None
 
 async def init_supabase():
-    global supabase, ref
-    if supabase is None:
-        supabase = await acreate_client(url, key)
-        ref = supabase.table("properties")
+    global db
+    if db is None:
+        print("Initializing Supabase client...")
+        db = await acreate_client(url, key)
+        print("Supabase client initialized successfully")
+
+def get_db():
+    """Returns the initialized Supabase client.
+    Make sure this is called after lifespan has run init_supabase()."""
+    if db is None:
+        raise RuntimeError("Supabase client not initialized. Make sure lifespan has run init_supabase()")
+    return db

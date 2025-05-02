@@ -1,0 +1,487 @@
+{
+	"info": {
+		"_postman_id": "YOUR_UNIQUE_COLLECTION_ID", 
+		"name": "Snipe App API",
+		"description": "Postman collection for testing the Snipe/strike game API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "YOUR_EXPORTER_ID" 
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"{{username1}}\" \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						},
+						"description": "Registers a new user. Use different usernames for {{username1}} and {{username2}}."
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/{{username1}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"{{username1}}"
+							]
+						},
+						"description": "Gets profile (including blackout) for a specific user."
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Settings",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"blackout_start_hour\": 14 \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/{{username1}}/settings",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"{{username1}}",
+								"settings"
+							]
+						},
+						"description": "Updates the blackout start hour (12-19 or null to clear)."
+					},
+					"response": []
+				},
+				{
+					"name": "Search Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/search/?query=user",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"search",
+								""
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "user",
+									"description": "Search term"
+								}
+							]
+						},
+						"description": "Searches for users by username fragment."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints related to user management."
+		},
+		{
+			"name": "Friends",
+			"item": [
+				{
+					"name": "Get Friends List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/{{username1}}/friends",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"{{username1}}",
+								"friends"
+							]
+						},
+						"description": "Gets the list of accepted friends for {{username1}}."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Friend Requests (Incoming)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/{{username1}}/friends/requests",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"{{username1}}",
+								"friends",
+								"requests"
+							]
+						},
+						"description": "Gets pending friend requests sent TO {{username1}}."
+					},
+					"response": []
+				},
+				{
+					"name": "Send Friend Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from_username\": \"{{username1}}\",\n  \"to_username\": \"{{username2}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/friends/requests",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"friends",
+								"requests"
+							]
+						},
+						"description": "Sends a friend request from {{username1}} to {{username2}}. **Note:** The response won't contain the request_id directly, you might need to check the 'Get Friend Requests' endpoint on the recipient's side to find it for accepting/declining."
+					},
+					"response": []
+				},
+				{
+					"name": "Accept Friend Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/friends/requests/{{friend_request_id}}/accept",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"friends",
+								"requests",
+								"{{friend_request_id}}",
+								"accept"
+							]
+						},
+						"description": "Accepts a pending request. Set {{friend_request_id}} to the ID obtained from the recipient's request list."
+					},
+					"response": []
+				},
+				{
+					"name": "Decline Friend Request",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/friends/requests/{{friend_request_id}}/decline",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"friends",
+								"requests",
+								"{{friend_request_id}}",
+								"decline"
+							]
+						},
+						"description": "Declines/cancels a pending request. Set {{friend_request_id}}."
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Friend",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/{{username1}}/friends/{{username2}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"{{username1}}",
+								"friends",
+								"{{username2}}"
+							]
+						},
+						"description": "Removes an existing friendship between {{username1}} and {{username2}}."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for managing friendships and requests."
+		},
+		{
+			"name": "Duels",
+			"item": [
+				{
+					"name": "Request Duel",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"requester_username\": \"{{username1}}\",\n  \"opponent_username\": \"{{username2}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/duels/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"duels",
+								""
+							]
+						},
+						"description": "Initiates a duel request from {{username1}} to {{username2}} for today. Users must be friends."
+					},
+					"response": []
+				},
+				{
+					"name": "Accept Duel",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/duels/{{duel_id}}/accept",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"duels",
+								"{{duel_id}}",
+								"accept"
+							]
+						},
+						"description": "Accepts a pending duel. Set {{duel_id}} from the 'Request Duel' response. This makes the duel ACTIVE and sets snipe times."
+					},
+					"response": []
+				},
+				{
+					"name": "Decline Duel",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/duels/{{duel_id}}/decline",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"duels",
+								"{{duel_id}}",
+								"decline"
+							]
+						},
+						"description": "Declines a PENDING duel request. Set {{duel_id}}."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current Duel",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/{{username1}}/current",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"{{username1}}",
+								"current"
+							]
+						},
+						"description": "Gets the ACTIVE duel details for {{username1}} for today, if one exists."
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Prediction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"{{username1}}\",\n  \"latitude\": 42.4440,\n  \"longitude\": -76.5019\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/duels/{{duel_id}}/predict",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"duels",
+								"{{duel_id}}",
+								"predict"
+							]
+						},
+						"description": "Submits {{username1}}'s prediction for their opponent in the specified {{duel_id}}. Must be within the allowed time window."
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Check-in",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"{{username1}}\",\n  \"latitude\": 42.4430,\n  \"longitude\": -76.5000,\n  \"timestamp\": \"{{$isoTimestamp}}\" \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/duels/{{duel_id}}/checkin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"duels",
+								"{{duel_id}}",
+								"checkin"
+							]
+						},
+						"description": "Submits {{username1}}'s actual location for {{duel_id}}. Uses Postman's dynamic {{$isoTimestamp}}. Must be within the +/- tolerance of the user's snipe_time."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Duel Results",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/duels/{{duel_id}}/results",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"duels",
+								"{{duel_id}}",
+								"results"
+							]
+						},
+						"description": "Retrieves the results (winner, distances, DQs) for a COMPLETED duel. Set {{duel_id}}."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for managing duels, predictions, and check-ins."
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "username1",
+			"value": "userone",
+			"type": "string"
+		},
+		{
+			"key": "username2",
+			"value": "usertwo",
+			"type": "string"
+		},
+		{
+			"key": "friend_request_id",
+			"value": "REPLACE_WITH_ACTUAL_REQUEST_ID",
+			"type": "string"
+		},
+		{
+			"key": "duel_id",
+			"value": "REPLACE_WITH_ACTUAL_DUEL_ID",
+			"type": "string"
+		}
+	]
+}
