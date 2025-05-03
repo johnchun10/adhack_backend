@@ -172,3 +172,12 @@ class DuelResult(BaseModel):
 
     class Config:
         from_attributes = True
+        
+class DuelRequest(BaseModel):
+    """Model for duel requests (response for GET /duels/requests)."""
+    id: uuid.UUID
+    requester_username: str
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True

@@ -131,6 +131,51 @@ async def _calculate_and_update_duel_results(duel_id: uuid.UUID):
 
 # --- Routes ---
 
+@router.get("/duels/requests", response_model=List[DuelRequest])
+async def get_duel_requests(username: str):
+    """
+    Get all pending duel requests for a specified user.
+    """
+    # Verify user exists
+    user_id = await _get_user_id(username)
+    
+    try:
+        # Get all pending duels where user is opponent (user2)
+        res = await get_db().table("duels") \
+            .select("id, user1_id, created_at") \
+            .eq("user2_id", str(user_id)) \
+            .eq("status", DuelStatus.PENDING.value) \
+            .execute()
+        
+        if not res.data:
+            return [] # Return empty list if no requests found
+        
+        # For each duel request, fetch the requester's username
+        duel_requests = []
+        for duel in res.data:
+            # Get requester's username
+            user_res = await get_db().table("users") \
+                .select("username") \
+                .eq("id", duel["user1_id"]) \
+                .limit(1) \
+                .execute()
+            
+            if user_res.data:
+                duel_requests.append({
+                    "id": duel["id"],
+                    "requester_username": user_res.data[0]["username"],
+                    "created_at": duel["created_at"]
+                })
+        
+        return duel_requests
+        
+    except Exception as e:
+        print(f"Error fetching duel requests: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error fetching duel requests"
+        )
+
 @router.post("/duels/", status_code=status.HTTP_201_CREATED, response_model=Duel)
 async def request_duel(request_in: DuelRequestCreate):
     """
