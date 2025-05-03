@@ -1,7 +1,7 @@
 import uuid
 import json
 from datetime import datetime, timezone, timedelta
-from typing import Optional
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Path, status
 
