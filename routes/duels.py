@@ -6,7 +6,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Path, status
 
 from db import get_db
-from models import (CheckinCreate, CurrentDuelInfo, Duel, DuelResult, DuelRequestCreate,
+from models import (CheckinCreate, CurrentDuelInfo, Duel, DuelRequest, DuelResult, DuelRequestCreate,
                         DuelStatus, GenericResponse, PredictionCreate)
 from routes.users import _get_user_or_404 # Reuse user helper
 from routes.friends import _get_user_id # Reuse user ID helper
